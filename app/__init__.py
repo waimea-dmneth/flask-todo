@@ -25,7 +25,17 @@ register_error_handlers(app)
 #-----------------------------------------------------------
 @app.get("/")
 def index():
-    return render_template("pages/home.jinja")
+    with connect_db() as client:
+        sql = """
+            SELECT name, complete, priority, timestamp FROM todo
+            WHERE complete = ?
+            ORDER BY priority ASC
+        """
+        values = [0]
+        aTasks = client.execute(sql, values)
+
+
+    return render_template("pages/home.jinja", activeTasks = aTasks.rows)
 
 
 #-----------------------------------------------------------
@@ -33,6 +43,8 @@ def index():
 #-----------------------------------------------------------
 @app.get("/about/")
 def about():
+
+
     return render_template("pages/about.jinja")
 
 
