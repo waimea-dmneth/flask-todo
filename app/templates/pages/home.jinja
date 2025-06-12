@@ -18,21 +18,23 @@
 {% block content %}
 
     <h1>Active Tasks</h1>
-        {% for task in activeTasks %}
-            <article>
-                <h3> {{ task.name }}</h3>
-            </article>
+    <p>
+        {% for task in aTasks %}
+                <article>
+                    <h3> {{ task.name }}</h3>
+                </article>
+        {% else %}
+            <h2> No Active Tasks</h2>
         {% endfor %}
-
-
+    </p>
+        
     <h1>Completed Tasks</h1>
+    <p>
         {% for task in inactiveTasks %}
             <p></p>
         {% endfor %}
-
-
-
-    <a href="/things" role="button">Go to the Things...</a>
+    </p>
+    
 
 {% endblock %}
 

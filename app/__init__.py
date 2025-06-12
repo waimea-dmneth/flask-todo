@@ -17,7 +17,7 @@ app = Flask(__name__)
 init_session(app)
 
 # Handle 404 and 500 errors
-register_error_handlers(app)
+# register_error_handlers(app)
 
 
 #-----------------------------------------------------------
@@ -27,25 +27,20 @@ register_error_handlers(app)
 def index():
     with connect_db() as client:
         sql = """
-            SELECT name, complete, priority, timestamp FROM todo
-            WHERE complete = ?
+            SELECT name, complete, priority, timestamp,
+            FROM todo
+            WHERE complete=?
             ORDER BY priority ASC
         """
         values = [0]
-        aTasks = client.execute(sql, values)
-
-
-    return render_template("pages/home.jinja", activeTasks = aTasks.rows)
+        result = client.execute(sql, values)
+        aTasks = result.rows
+        return render_template("pages/home.jinja", aTasks = aTasks)
 
 
 #-----------------------------------------------------------
 # About page route
 #-----------------------------------------------------------
-@app.get("/about/")
-def about():
-
-
-    return render_template("pages/about.jinja")
 
 
 #-----------------------------------------------------------
