@@ -2,19 +2,20 @@
   User stylesheet - Building upon PicoCSS
 =====================================================*/
 
-
-/* ABOUT PAGE -------------------------------------------- */
-
-#tech-stack {
+#tasks {
     display: flex;
-    gap: 1rem;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-#tech-stack article {
-    flex: 1;
+#task {
+    padding-top: 5rem;
+    padding: 2rem;
 }
 
+#task button{
+    
+}
 
 /* MESSAGES -------------------------------------------- */
 

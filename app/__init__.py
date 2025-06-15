@@ -27,15 +27,26 @@ init_session(app)
 def index():
     with connect_db() as client:
         sql = """
-            SELECT name, complete, priority, timestamp,
-            FROM todo
+            SELECT name, complete, priority, timestamp
+            FROM tasks
             WHERE complete=?
-            ORDER BY priority ASC
+            ORDER BY priority DESC
         """
         values = [0]
-        result = client.execute(sql, values)
-        aTasks = result.rows
-        return render_template("pages/home.jinja", aTasks = aTasks)
+        tasks = client.execute(sql, values)
+        aTasks = tasks.rows
+
+        sql = """
+            SELECT name, complete, priority, timestamp
+            FROM tasks
+            WHERE complete=?
+            ORDER BY name ASC
+        """
+        values = [1]
+        tasks = client.execute(sql, values)
+        inaTasks = tasks.rows
+        
+        return render_template("pages/home.jinja", aTasks = aTasks, inaTasks = inaTasks)
 
 
 #-----------------------------------------------------------

@@ -16,25 +16,29 @@
 
 
 {% block content %}
-
-    <h1>Active Tasks</h1>
-    <p>
-        {% for task in aTasks %}
-                <article>
-                    <h3> {{ task.name }}</h3>
-                </article>
-        {% else %}
-            <h2> No Active Tasks</h2>
-        {% endfor %}
-    </p>
-        
-    <h1>Completed Tasks</h1>
-    <p>
-        {% for task in inactiveTasks %}
-            <p></p>
-        {% endfor %}
-    </p>
-    
-
+    <div>
+        <h1>Active Tasks</h1>
+        <div id="tasks">
+            {% for task in aTasks %}
+                    <article id="task">
+                        <h3> {{ task.name }}</h3>
+                        <p>priority: {{task.priority}}</p>
+                        <p>{{task.timestamp}}</p>
+                        <button>  </button>
+                    </article>
+            {% else %}
+                <h2> No Active Tasks</h2>
+            {% endfor %}
+        </div>
+            
+        <h1>Completed Tasks</h1>
+        <div id="tasks">
+            {% for task in inaTasks %}
+                <p>{{task.name}}</p>
+            {% else %}
+                <h4> No Completed Tasks</h2>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
 
