@@ -57,16 +57,16 @@ def index():
 #-----------------------------------------------------------
 # Things page route - Show all the things, and new thing form
 #-----------------------------------------------------------
-@app.get("/things/")
-def show_all_things():
+@app.get("/edit/<int:id>")
+def show_all_things(id):
     with connect_db() as client:
-        # Get all the things from the DB
-        sql = "SELECT id, name FROM things ORDER BY name ASC"
-        result = client.execute(sql)
-        things = result.rows
 
-        # And show them on the page
-        return render_template("pages/things.jinja", things=things)
+    #     sql = "SELECT id, name FROM things ORDER BY name ASC"
+    #     result = client.execute(sql)
+        things = result.rows[0]
+
+    #     # And show them on the page
+        return render_template("pages/edit.jinja")
 
 
 #-----------------------------------------------------------
