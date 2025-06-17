@@ -1,9 +1,3 @@
-{#=====================================================
-  Thing page
-  - Shows details of a single thing
-  - Has a delete link to remove it
-=====================================================#}
-
 {% extends 'pages/base.jinja' %}
 
 
@@ -15,10 +9,24 @@
 
 
 {% block content %}
+    <form action="/update/{{thing.id}}" method="post">
+        <label>
+            Name
+            <input name="name" type="text" value="{{thing.name}}" required>
+        </label>
+        <label>
+            Priority 1-5
+            <input name="priority" type="number" value="{{thing.priority}}" min="1" max="5" required>
+        </label>
+        <label>
+            Complete Task?
+            <input name="complete" type="checkbox" value="{{thing.complete}}">
+        </label>
 
-   
+        <button id="button2"> Update </button>
+   </form>
 
-    <a role="button" href="/">Back</a>
+    <a role="button" id="button2" href="/">Back</a>
 
 {% endblock %}
 

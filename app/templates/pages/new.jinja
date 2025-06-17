@@ -1,0 +1,37 @@
+{#=====================================================
+  Things list page
+  - List of things passed in as 'things' array
+  - Form for adding a new thing
+=====================================================#}
+
+{% extends 'pages/base.jinja' %}
+
+
+{% block title %}
+
+    Flask Demo - All Things
+
+{% endblock %}
+
+
+{% block content %}
+
+    <article>
+    <form action="/add" method="post">
+        <label>
+            Name
+            <input name="name" type="text" value="New Name Here" required>
+        </label>
+        <label>
+            Priority 1-5
+            <input name="priority" type="number" value="3" min="1" max="5" required>
+        </label>
+
+        <button id="button2"> Add Task </button>
+   </form>
+
+    <a role="button" id="button2" href="/">Back</a>
+    </article>
+
+{% endblock %}
+

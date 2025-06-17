@@ -27,7 +27,7 @@ init_session(app)
 def index():
     with connect_db() as client:
         sql = """
-            SELECT name, complete, priority, timestamp
+            SELECT *
             FROM tasks
             WHERE complete=?
             ORDER BY priority DESC
@@ -37,82 +37,102 @@ def index():
         aTasks = tasks.rows
 
         sql = """
-            SELECT name, complete, priority, timestamp
+            SELECT *
             FROM tasks
-            WHERE complete=?
+            WHERE complete!=?
             ORDER BY name ASC
         """
-        values = [1]
         tasks = client.execute(sql, values)
         inaTasks = tasks.rows
         
         return render_template("pages/home.jinja", aTasks = aTasks, inaTasks = inaTasks)
-
-
-#-----------------------------------------------------------
-# About page route
-#-----------------------------------------------------------
-
-
-#-----------------------------------------------------------
-# Things page route - Show all the things, and new thing form
-#-----------------------------------------------------------
+    
 @app.get("/edit/<int:id>")
-def show_all_things(id):
+def editPage(id):
     with connect_db() as client:
-
-    #     sql = "SELECT id, name FROM things ORDER BY name ASC"
-    #     result = client.execute(sql)
-        things = result.rows[0]
-
-    #     # And show them on the page
-        return render_template("pages/edit.jinja")
-
-
-#-----------------------------------------------------------
-# Thing page route - Show details of a single thing
-#-----------------------------------------------------------
-@app.get("/thing/<int:id>")
-def show_one_thing(id):
-    with connect_db() as client:
-        # Get the thing details from the DB
-        sql = "SELECT id, name, price FROM things WHERE id=?"
+        sql = "SELECT id, complete, name, priority FROM tasks WHERE id=?"
         values = [id]
-        result = client.execute(sql, values)
+        result = client.execute(sql,values)
+        thing = result.rows[0]
 
-        # Did we get a result?
-        if result.rows:
-            # yes, so show it on the page
-            thing = result.rows[0]
-            return render_template("pages/thing.jinja", thing=thing)
+        return render_template("pages/edit.jinja",thing = thing)
+    
+@app.get("/new")
+def newTaskPage():
+    return render_template("pages/new.jinja")
 
+@app.post("/update/<int:id>")
+def updateDB(id):
+    with connect_db() as client:
+        complete = request.form.get("complete")
+        if not complete :
+            complete = 0
         else:
-            # No, so show error
-            return not_found_error()
+            complete = 1
+        sql = """
+            UPDATE tasks 
+            SET name=?, priority=?, complete=?
+            WHERE id=?
+        """
+        values= [request.form.get("name"), request.form.get("priority"),complete , id]
+        client.execute(sql,values)
+        return redirect("/")
 
+@app.get("/complete/<int:id>")
+def completeTask(id):
+    with connect_db() as client:
+        sql = """
+            UPDATE tasks 
+            SET complete=?
+            WHERE id=?
+        """
+        values= [1,id]
+        client.execute(sql,values)
+        return redirect("/")
+    
+@app.get("/restore/<int:id>")
+def restoreTask(id):
+    with connect_db() as client:
+        sql = """
+            UPDATE tasks 
+            SET complete=?
+            WHERE id=?
+        """
+        values= [0,id]
+        client.execute(sql,values)
+        return redirect("/")
+
+@app.get("/delete/<int:id>")
+def deleteTask(id):
+    with connect_db() as client:
+        sql = """
+            DELETE FROM tasks 
+            WHERE id=?
+        """
+        values= [id]
+        client.execute(sql,values)
+        return redirect("/")
 
 #-----------------------------------------------------------
 # Route for adding a thing, using data posted from a form
 #-----------------------------------------------------------
 @app.post("/add")
-def add_a_thing():
+def addTasks():
     # Get the data from the form
     name  = request.form.get("name")
-    price = request.form.get("price")
+    priority = request.form.get("priority")
 
-    # Sanitise the inputs
+    # Sanitize the inputs
     name = html.escape(name)
-    price = html.escape(price)
+    priority = html.escape(priority)
 
     with connect_db() as client:
-        # Add the thing to the DB
-        sql = "INSERT INTO things (name, price) VALUES (?, ?)"
-        values = [name, price]
+        sql = "INSERT INTO tasks (name, priority) VALUES (?, ?)"
+        values = [name, priority]
         client.execute(sql, values)
 
-        # Go back to the home page
-        flash(f"Thing '{name}' added", "success")
-        return redirect("/things")
+        flash(f"Task '{name}' added", "success")
+        return redirect("/")
 
 
 #-----------------------------------------------------------
@@ -127,7 +147,7 @@ def delete_a_thing(id):
         client.execute(sql, values)
 
         # Go back to the home page
-        flash("Thing deleted", "warning")
-        return redirect("/things")
+        flash("Task deleted", "warning")
+        return redirect("/")
 
 
