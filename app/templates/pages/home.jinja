@@ -21,7 +21,7 @@
         <div id="tasks">
             {% for task in aTasks %}
                     <article id="task">
-                        <h3> {{ task.name }}  <a href="/edit/{{task.id}}" role="button" id="button">✎</a ></h3>
+                        <h3> {{ task.name }}   <a href="/edit/{{task.id}}" role="button" id="button">✎</a ></h3>
                         <p>priority: {{task.priority}}</p>
                         <p>{{task.timestamp}}</p>
                         <div><a href="/delete/{{task.id}}" role="button" id="button2"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
